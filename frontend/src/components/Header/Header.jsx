@@ -1,6 +1,7 @@
 import { BookOpen, Search, User } from 'lucide-react'
+import { NavLink } from 'react-router'
 
-function Header() {
+const Header = () => {
     return (
         <header className="border-b border-gray-200 bg-white">
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
@@ -16,17 +17,26 @@ function Header() {
 
                 {/* Navigation */}
                 <nav className="hidden items-center gap-8 md:flex">
-                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-black">
+                    <NavLink
+                        to="/"
+                        className="text-sm font-medium text-gray-700 hover:text-black"
+                    >
                         Home
-                    </a>
+                    </NavLink>
 
-                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-black">
+                    <NavLink
+                        to="/books"
+                        className="text-sm font-medium text-gray-700 hover:text-black"
+                    >
                         Books
-                    </a>
+                    </NavLink>
 
-                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-black">
+                    <NavLink
+                        to="/categories"
+                        className="text-sm font-medium text-gray-700 hover:text-black"
+                    >
                         Categories
-                    </a>
+                    </NavLink>
                 </nav>
 
                 {/* Right Section */}

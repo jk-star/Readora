@@ -1,19 +1,20 @@
+import { Routes, Route } from 'react-router'
 import Header from './components/Header/Header'
+
+import Home from './pages/Home/Home'
+import Books from './pages/Books/Books'
+import Categories from './pages/Categories/Categories'
 function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
 
       <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-5xl font-bold">
-            Readora
-          </h1>
-
-          <p className="mt-4 text-gray-600">
-            Your Digital Book Reader
-          </p>
-        </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/books" element={<Books />} />
+          <Route path="/categories" element={<Categories />} />
+        </Routes>
       </main>
     </div>
 

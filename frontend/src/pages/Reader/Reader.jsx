@@ -31,9 +31,24 @@ function Reader() {
     }
 
     const chapter = book.chapters[chapterIndex]
+    const progress =
+        ((chapterIndex + 1) / book.chapters.length) * 100
+
     return (
         <div className="min-h-screen bg-[#f8f6f1]">
+            <div className="mb-8">
+                <div className="mb-2 flex items-center justify-between text-sm text-gray-500">
+                    <span>Reading Progress</span>
+                    <span>{Math.round(progress)}%</span>
+                </div>
 
+                <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                    <div
+                        className="h-full rounded-full bg-black transition-all duration-300"
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
+            </div>
             {/* Reader Header */}
             <header className="border-b border-gray-200 bg-white">
                 <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4">

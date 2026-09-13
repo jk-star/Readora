@@ -1,4 +1,5 @@
-import { ArrowLeft, Settings } from 'lucide-react'
+import { useState } from 'react'
+import { ArrowLeft, ArrowRight, Settings } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import books from '../../data/books'
 
@@ -8,6 +9,9 @@ function Reader() {
     const book = books.find(
         (book) => book.id === Number(id)
     )
+
+    const [chapterIndex, setChapterIndex] = useState(0)
+
 
     if (!book) {
         return (
@@ -26,8 +30,7 @@ function Reader() {
         )
     }
 
-    const chapter = book.chapters[0]
-
+    const chapter = book.chapters[chapterIndex]
     return (
         <div className="min-h-screen bg-[#f8f6f1]">
 
@@ -82,7 +85,41 @@ function Reader() {
                 </article>
             </main>
 
+            <div className="mt-12 flex items-center justify-between border-t border-gray-200 pt-8">
+
+                <button
+                    type="button"
+                    onClick={() =>
+                        setChapterIndex((currentIndex) => currentIndex - 1)
+                    }
+                    disabled={chapterIndex === 0}
+                    className="flex items-center gap-2 rounded-lg border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                    <ArrowLeft size={18} />
+                    Previous
+                </button>
+
+                <span className="text-sm text-gray-500">
+                    Chapter {chapterIndex + 1} of {book.chapters.length}
+                </span>
+
+                <button
+                    type="button"
+                    onClick={() =>
+                        setChapterIndex((currentIndex) => currentIndex + 1)
+                    }
+                    disabled={chapterIndex === book.chapters.length - 1}
+                    className="flex items-center gap-2 rounded-lg bg-black px-5 py-3 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                    Next
+                    <ArrowRight size={18} />
+                </button>
+
+            </div>
+
         </div>
+
+
     )
 }
 

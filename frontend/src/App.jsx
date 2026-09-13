@@ -4,6 +4,8 @@ import Header from './components/Header/Header'
 import Home from './pages/Home/Home'
 import Books from './pages/Books/Books'
 import Categories from './pages/Categories/Categories'
+
+import BookDetails from './pages/BookDetails/BookDetails'
 function App() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -13,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/books" element={<Books />} />
+          <Route path="/books/:id" element={<BookDetails />} />
           <Route path="/categories" element={<Categories />} />
         </Routes>
       </main>

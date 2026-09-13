@@ -1,10 +1,12 @@
-const BookCard = ({ title, author }) => {
+const BookCard = ({ title, author, cover }) => {
     return (
         <div className="rounded-xl bg-white p-4 shadow-sm">
-            <div className="flex h-56 items-center justify-center rounded-lg bg-gray-200">
-                <span className="text-gray-500">
-                    Book Cover
-                </span>
+            <div className="overflow-hidden rounded-lg">
+                <img
+                    src={cover}
+                    alt={title}
+                    className="h-56 w-full object-cover"
+                />
             </div>
 
             <h3 className="mt-4 font-semibold text-gray-900">

@@ -38,17 +38,29 @@ function Books() {
                 </div>
 
                 {/* Books Grid */}
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {filteredBooks.map((book) => (
-                        <BookCard
-                            key={book.id}
-                            id={book.id}
-                            title={book.title}
-                            author={book.author}
-                            cover={book.cover}
-                        />
-                    ))}
-                </div>
+                {filteredBooks.length > 0 ? (
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {filteredBooks.map((book) => (
+                            <BookCard
+                                key={book.id}
+                                id={book.id}
+                                title={book.title}
+                                author={book.author}
+                                cover={book.cover}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="py-16 text-center">
+                        <h2 className="text-2xl font-semibold text-gray-900">
+                            No Books Found
+                        </h2>
+
+                        <p className="mt-2 text-gray-600">
+                            Try searching with a different title.
+                        </p>
+                    </div>
+                )}
 
             </div>
         </section>

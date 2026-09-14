@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Settings } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Settings, Bookmark } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import books from '../../data/books'
 import ChapterList from '../../components/ChapterList/ChapterList'
@@ -15,11 +15,10 @@ function Reader() {
     const [chapterIndex, setChapterIndex] = useState(0)
 
     const [showSettings, setShowSettings] = useState(false)
-
     const [fontSize, setFontSize] = useState('text-base')
-
     const [theme, setTheme] = useState('light')
 
+    const [isBookmarked, setIsBookmarked] = useState(false)
 
     if (!book) {
         return (
@@ -145,9 +144,32 @@ function Reader() {
                         </p>
 
                         {/* Chapter Title */}
-                        <h2 className="mt-4 text-center text-3xl font-bold text-gray-900">
-                            {chapter.title}
-                        </h2>
+                        <div className="mt-4 flex items-center justify-center gap-3">
+                            <h2 className="text-3xl font-bold text-gray-900">
+                                {chapter.title}
+                            </h2>
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setIsBookmarked((value) => !value)
+                                }
+                                className={`rounded-lg p-2 transition ${isBookmarked
+                                    ? 'bg-black text-white'
+                                    : 'text-gray-500 hover:bg-gray-100'
+                                    }`}
+                                title={
+                                    isBookmarked
+                                        ? 'Remove bookmark'
+                                        : 'Bookmark chapter'
+                                }
+                            >
+                                <Bookmark
+                                    size={20}
+                                    fill={isBookmarked ? 'currentColor' : 'none'}
+                                />
+                            </button>
+                        </div>
 
                         {/* Chapter Paragraphs */}
                         <div className="mt-10 space-y-6 text-lg leading-8 text-gray-700">

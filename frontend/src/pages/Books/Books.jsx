@@ -4,7 +4,7 @@ import books from '../../data/books'
 import BookCard from '../../components/BookCard/BookCard'
 
 function Books() {
-    const [searchParams] = useSearchParams()
+    const [searchParams, setSearchParams] = useSearchParams()
     const urlCategory = searchParams.get('category') || 'all'
 
     const [search, setSearch] = useState('')
@@ -50,9 +50,19 @@ function Books() {
 
                         <select
                             value={category}
-                            onChange={(event) =>
-                                setCategory(event.target.value)
-                            }
+                            onChange={(event) => {
+                                const value = event.target.value
+
+                                setCategory(value)
+
+                                if (value === 'all') {
+                                    setSearchParams({})
+                                } else {
+                                    setSearchParams({
+                                        category: value,
+                                    })
+                                }
+                            }}
                             className="rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-black"
                         >
                             <option value="all">All Categories</option>
@@ -69,6 +79,7 @@ function Books() {
                                 onClick={() => {
                                     setSearch('')
                                     setCategory('all')
+                                    setSearchParams({})
                                 }}
                                 className="rounded-lg border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100"
                             >

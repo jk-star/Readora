@@ -4,10 +4,19 @@ import BookCard from '../../components/BookCard/BookCard'
 
 function Books() {
     const [search, setSearch] = useState('')
+    const [category, setCategory] = useState('all')
 
-    const filteredBooks = books.filter((book) =>
-        book.title.toLowerCase().includes(search.toLowerCase())
-    )
+    const filteredBooks = books.filter((book) => {
+        const matchesSearch = book.title
+            .toLowerCase()
+            .includes(search.toLowerCase())
+
+        const matchesCategory =
+            category === 'all' ||
+            book.category === category
+
+        return matchesSearch && matchesCategory
+    })
 
     return (
         <section className="min-h-screen px-4 py-12">
@@ -24,16 +33,25 @@ function Books() {
                     </p>
 
                     {/* Search */}
-                    <div className="mt-6">
+                    <div className="mt-6 flex flex-col gap-4 sm:flex-row">
                         <input
                             type="text"
                             value={search}
-                            onChange={(event) =>
-                                setSearch(event.target.value)
-                            }
+                            onChange={(event) => setSearch(event.target.value)}
                             placeholder="Search books..."
                             className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
                         />
+
+                        <select
+                            value={category}
+                            onChange={(event) => setCategory(event.target.value)}
+                            className="rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-black"
+                        >
+                            <option value="all">All Categories</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Self Improvement">Self Improvement</option>
+                        </select>
                     </div>
                 </div>
 

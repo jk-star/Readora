@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ArrowLeft, ArrowRight, Settings } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import books from '../../data/books'
+import ChapterList from '../../components/ChapterList/ChapterList'
 
 function Reader() {
     const { id } = useParams()
@@ -77,6 +78,12 @@ function Reader() {
 
             {/* Reading Content */}
             <main className="px-4 py-12">
+                <ChapterList
+                    chapters={book.chapters}
+                    currentChapterIndex={chapterIndex}
+                    onChapterSelect={setChapterIndex}
+                />
+
                 <article className="mx-auto max-w-3xl">
 
                     <p className="text-center text-sm font-semibold uppercase tracking-wider text-gray-500">

@@ -37,21 +37,40 @@ function Books() {
                         <input
                             type="text"
                             value={search}
-                            onChange={(event) => setSearch(event.target.value)}
+                            onChange={(event) =>
+                                setSearch(event.target.value)
+                            }
                             placeholder="Search books..."
                             className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
                         />
 
                         <select
                             value={category}
-                            onChange={(event) => setCategory(event.target.value)}
+                            onChange={(event) =>
+                                setCategory(event.target.value)
+                            }
                             className="rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-black"
                         >
                             <option value="all">All Categories</option>
                             <option value="Finance">Finance</option>
                             <option value="Fiction">Fiction</option>
-                            <option value="Self Improvement">Self Improvement</option>
+                            <option value="Self Improvement">
+                                Self Improvement
+                            </option>
                         </select>
+
+                        {(search !== '' || category !== 'all') && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSearch('')
+                                    setCategory('all')
+                                }}
+                                className="rounded-lg border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                            >
+                                Clear Filters
+                            </button>
+                        )}
                     </div>
                 </div>
 

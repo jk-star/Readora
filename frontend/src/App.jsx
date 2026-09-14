@@ -13,7 +13,7 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <main className="min-h-screen flex items-center justify-center">
+      <main className="min-h-screen w-full">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/books" element={<Books />} />

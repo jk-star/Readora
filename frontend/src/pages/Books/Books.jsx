@@ -1,10 +1,14 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router'
 import books from '../../data/books'
 import BookCard from '../../components/BookCard/BookCard'
 
 function Books() {
+    const [searchParams] = useSearchParams()
+    const urlCategory = searchParams.get('category') || 'all'
+
     const [search, setSearch] = useState('')
-    const [category, setCategory] = useState('all')
+    const [category, setCategory] = useState(urlCategory)
 
     const filteredBooks = books.filter((book) => {
         const matchesSearch = book.title

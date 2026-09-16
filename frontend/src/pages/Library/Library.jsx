@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import books from '../../data/books'
+import { Bookmark } from 'lucide-react'
 
 function Library() {
     const [bookmarkedChapters, setBookmarkedChapters] = useState({})
@@ -30,6 +31,23 @@ function Library() {
             }
         })
     })
+
+    const removeBookmark = (bookId, chapterId) => {
+        const bookmarkKey = `${bookId}-${chapterId}`
+
+        setBookmarkedChapters((current) => {
+            const updated = { ...current }
+
+            delete updated[bookmarkKey]
+
+            localStorage.setItem(
+                'readora-bookmarks',
+                JSON.stringify(updated)
+            )
+
+            return updated
+        })
+    }
 
     return (
         <section className="min-h-screen px-4 py-12">
@@ -87,6 +105,16 @@ function Library() {
                                     >
                                         Continue Reading →
                                     </Link>
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            removeBookmark(book.id, chapter.id)
+                                        }
+                                        className="mt-4 flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                                    >
+                                        <Bookmark size={16} />
+                                        Remove Bookmark
+                                    </button>
                                 </div>
                             )
                         )}

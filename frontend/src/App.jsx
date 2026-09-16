@@ -8,6 +8,8 @@ import Categories from './pages/Categories/Categories'
 import BookDetails from './pages/BookDetails/BookDetails'
 
 import Reader from './pages/Reader/Reader'
+
+import Library from './pages/Library/Library'
 function App() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -20,6 +22,7 @@ function App() {
           <Route path="/books/:id" element={<BookDetails />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/reader/:id" element={<Reader />} />
+          <Route path="/library" element={<Library />} />
         </Routes>
       </main>
     </div>

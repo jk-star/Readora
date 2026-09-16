@@ -37,6 +37,14 @@ const Header = () => {
                     >
                         Categories
                     </NavLink>
+
+                    <NavLink
+                        to="/library"
+                        className="text-sm font-medium text-gray-700 hover:text-black"
+                    >
+                        Library
+                    </NavLink>
+
                 </nav>
 
                 {/* Right Section */}

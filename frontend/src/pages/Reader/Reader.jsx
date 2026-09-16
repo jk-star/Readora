@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Settings, Bookmark } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import books from '../../data/books'
@@ -18,7 +18,13 @@ function Reader() {
     const [fontSize, setFontSize] = useState('text-base')
     const [theme, setTheme] = useState('light')
 
-    const [isBookmarked, setIsBookmarked] = useState(false)
+    const [bookmarkedChapters, setBookmarkedChapters] = useState(() => {
+        const savedBookmarks = localStorage.getItem('readora-bookmarks')
+
+        return savedBookmarks
+            ? JSON.parse(savedBookmarks)
+            : {}
+    })
 
     if (!book) {
         return (
@@ -38,6 +44,16 @@ function Reader() {
     }
 
     const chapter = book.chapters[chapterIndex]
+
+    const bookmarkKey = `${book.id}-${chapter.id}`
+    const isBookmarked = bookmarkedChapters[bookmarkKey] || false
+
+    useEffect(() => {
+        localStorage.setItem(
+            'readora-bookmarks',
+            JSON.stringify(bookmarkedChapters)
+        )
+    }, [bookmarkedChapters])
 
     const progress =
         ((chapterIndex + 1) / book.chapters.length) * 100
@@ -151,17 +167,27 @@ function Reader() {
 
                             <button
                                 type="button"
-                                onClick={() =>
-                                    setIsBookmarked((value) => !value)
-                                }
+                                onClick={() => {
+                                    setBookmarkedChapters((current) => {
+                                        const updated = { ...current }
+
+                                        if (updated[bookmarkKey]) {
+                                            delete updated[bookmarkKey]
+                                        } else {
+                                            updated[bookmarkKey] = true
+                                        }
+
+                                        return updated
+                                    })
+                                }}
                                 className={`rounded-lg p-2 transition ${isBookmarked
                                     ? 'bg-black text-white'
                                     : 'text-gray-500 hover:bg-gray-100'
                                     }`}
                                 title={
                                     isBookmarked
-                                        ? 'Remove bookmark'
-                                        : 'Bookmark chapter'
+                                        ? 'bg-black text-white'
+                                        : 'text-gray-500 hover:bg-gray-100'
                                 }
                             >
                                 <Bookmark

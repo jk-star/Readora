@@ -1,7 +1,9 @@
 import { BookOpen, Search, User } from 'lucide-react'
 import { NavLink } from 'react-router'
+import { useAuth } from '../../context/AuthContext'
 
 const Header = () => {
+    const { user, logout } = useAuth()
     return (
         <header className="border-b border-gray-200 bg-white">
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
@@ -44,6 +46,29 @@ const Header = () => {
                     >
                         Library
                     </NavLink>
+
+                    {user ? (
+                        <div className="flex items-center gap-3">
+                            <span className="text-sm font-medium text-gray-700">
+                                Hi, {user.name}
+                            </span>
+
+                            <button
+                                type="button"
+                                onClick={logout}
+                                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <NavLink
+                            to="/login"
+                            className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+                        >
+                            Login
+                        </NavLink>
+                    )}
 
                 </nav>
 

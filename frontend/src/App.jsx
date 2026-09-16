@@ -12,6 +12,8 @@ import Reader from './pages/Reader/Reader'
 import Library from './pages/Library/Library'
 
 import Login from './pages/Login/Login'
+
+import Register from './pages/Register/Register'
 function App() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -26,6 +28,7 @@ function App() {
           <Route path="/reader/:id" element={<Reader />} />
           <Route path="/library" element={<Library />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </main>
     </div>

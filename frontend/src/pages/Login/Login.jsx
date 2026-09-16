@@ -1,8 +1,12 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { useAuth } from '../../context/AuthContext'
 
 
 function Login() {
+
+    const { login } = useAuth()
+    const navigate = useNavigate()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -26,6 +30,13 @@ function Login() {
         if (Object.keys(newErrors).length > 0) {
             return
         }
+
+        login({
+            name: email.split('@')[0],
+            email: email,
+        })
+
+        navigate('/')
 
         console.log('Email:', email)
         console.log('Password:', password)

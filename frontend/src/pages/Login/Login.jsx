@@ -4,14 +4,15 @@ import { Link, useNavigate } from 'react-router'
 import { useAuth } from '../../context/AuthContext'
 
 function Login() {
-    const { authenticate } = useAuth()
+    const { login } = useAuth()
     const navigate = useNavigate()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState({})
+    const [loading, setLoading] = useState(false)
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
 
         const newErrors = {}
@@ -30,17 +31,48 @@ function Login() {
             return
         }
 
-        const result = authenticate(email, password)
+        try {
+            setLoading(true)
+            setErrors({})
 
-        if (!result.success) {
+            const response = await fetch(
+                'http://localhost:8080/api/login',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                    }),
+                }
+            )
+
+            const result = await response.json()
+
+            if (!response.ok || !result.success) {
+                setErrors({
+                    email: result.message || 'Invalid email or password',
+                })
+
+                return
+            }
+
+            // Save logged-in user in AuthContext
+            login(result.user)
+
+            // Redirect to home
+            navigate('/')
+        } catch (error) {
+            console.error('Login error:', error)
+
             setErrors({
-                email: result.message,
+                email: 'Unable to connect to the server',
             })
-
-            return
+        } finally {
+            setLoading(false)
         }
-
-        navigate('/')
     }
 
     return (
@@ -116,11 +148,13 @@ function Login() {
                         )}
                     </div>
 
+                    {/* Login Button */}
                     <button
                         type="submit"
-                        className="w-full rounded-lg bg-black px-4 py-3 font-medium text-white transition hover:bg-gray-800"
+                        disabled={loading}
+                        className="w-full rounded-lg bg-black px-4 py-3 font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        Login
+                        {loading ? 'Logging in...' : 'Login'}
                     </button>
 
                     <p className="mt-6 text-center text-sm text-gray-600">

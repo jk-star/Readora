@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
+
 import { useAuth } from '../../context/AuthContext'
 
-
 function Login() {
-
-    const { login } = useAuth()
+    const { authenticate } = useAuth()
     const navigate = useNavigate()
 
     const [email, setEmail] = useState('')
@@ -31,26 +30,24 @@ function Login() {
             return
         }
 
-        login({
-            name: email.split('@')[0],
-            email: email,
-        })
+        const result = authenticate(email, password)
+
+        if (!result.success) {
+            setErrors({
+                email: result.message,
+            })
+
+            return
+        }
 
         navigate('/')
-
-        console.log('Email:', email)
-        console.log('Password:', password)
     }
 
     return (
         <section className="min-h-screen px-4 py-12">
-
             <div className="mx-auto max-w-md">
 
-                {/* Header */}
-
                 <div className="mb-8 text-center">
-
                     <h1 className="text-3xl font-bold text-gray-900">
                         Welcome Back
                     </h1>
@@ -58,11 +55,7 @@ function Login() {
                     <p className="mt-2 text-gray-600">
                         Login to continue reading on Readora.
                     </p>
-
                 </div>
-
-
-                {/* Login Form */}
 
                 <form
                     onSubmit={handleSubmit}
@@ -70,9 +63,7 @@ function Login() {
                 >
 
                     {/* Email */}
-
                     <div className="mb-5">
-
                         <label
                             htmlFor="email"
                             className="text-left mb-2 block text-sm font-medium text-gray-700"
@@ -96,14 +87,10 @@ function Login() {
                                 {errors.email}
                             </p>
                         )}
-
                     </div>
 
-
                     {/* Password */}
-
                     <div className="mb-6">
-
                         <label
                             htmlFor="password"
                             className="text-left mb-2 block text-sm font-medium text-gray-700"
@@ -127,11 +114,7 @@ function Login() {
                                 {errors.password}
                             </p>
                         )}
-
                     </div>
-
-
-                    {/* Submit */}
 
                     <button
                         type="submit"
@@ -140,11 +123,7 @@ function Login() {
                         Login
                     </button>
 
-
-                    {/* Register */}
-
                     <p className="mt-6 text-center text-sm text-gray-600">
-
                         Don't have an account?{' '}
 
                         <Link
@@ -153,13 +132,10 @@ function Login() {
                         >
                             Register
                         </Link>
-
                     </p>
 
                 </form>
-
             </div>
-
         </section>
     )
 }

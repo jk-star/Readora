@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 
+import { useAuth } from '../../context/AuthContext'
+
 function Register() {
+    const { register } = useAuth()
+
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -24,13 +28,16 @@ function Register() {
         if (!password.trim()) {
             newErrors.password = 'Password is required'
         } else if (password.length < 6) {
-            newErrors.password = 'Password must be at least 6 characters'
+            newErrors.password =
+                'Password must be at least 6 characters'
         }
 
         if (!confirmPassword.trim()) {
-            newErrors.confirmPassword = 'Please confirm your password'
+            newErrors.confirmPassword =
+                'Please confirm your password'
         } else if (password !== confirmPassword) {
-            newErrors.confirmPassword = 'Passwords do not match'
+            newErrors.confirmPassword =
+                'Passwords do not match'
         }
 
         setErrors(newErrors)
@@ -39,9 +46,13 @@ function Register() {
             return
         }
 
-        console.log('Name:', name)
-        console.log('Email:', email)
-        console.log('Password:', password)
+        register({
+            name,
+            email,
+            password,
+        })
+
+        console.log('Registration successful')
     }
 
     return (
@@ -82,6 +93,7 @@ function Register() {
                             placeholder="Enter your name"
                             className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
                         />
+
                         {errors.name && (
                             <p className="text-left mt-1 text-sm text-red-600">
                                 {errors.name}

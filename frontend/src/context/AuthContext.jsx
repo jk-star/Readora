@@ -11,7 +11,7 @@ function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
-    // Restore user when application starts
+    // Restore logged-in user when application starts
     useEffect(() => {
         const savedUser = localStorage.getItem('readora-user')
 
@@ -32,6 +32,49 @@ function AuthProvider({ children }) {
         )
     }
 
+    // Register
+    const register = (userData) => {
+        localStorage.setItem(
+            'readora-registered-user',
+            JSON.stringify(userData)
+        )
+    }
+
+    // Authenticate registered user
+    const authenticate = (email, password) => {
+        const savedUser = localStorage.getItem(
+            'readora-registered-user'
+        )
+
+        if (!savedUser) {
+            return {
+                success: false,
+                message: 'No registered user found',
+            }
+        }
+
+        const registeredUser = JSON.parse(savedUser)
+
+        if (
+            email !== registeredUser.email ||
+            password !== registeredUser.password
+        ) {
+            return {
+                success: false,
+                message: 'Invalid email or password',
+            }
+        }
+
+        login({
+            name: registeredUser.name,
+            email: registeredUser.email,
+        })
+
+        return {
+            success: true,
+        }
+    }
+
     // Logout
     const logout = () => {
         setUser(null)
@@ -45,6 +88,8 @@ function AuthProvider({ children }) {
                 user,
                 loading,
                 login,
+                register,
+                authenticate,
                 logout,
             }}
         >

@@ -1,95 +1,47 @@
-import {
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-} from 'react'
+import { createContext, useContext, useState } from 'react'
 
 const AuthContext = createContext()
 
 function AuthProvider({ children }) {
-    const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState(() => {
+        const savedUser = localStorage.getItem('readora_user')
 
-    // Restore logged-in user when application starts
-    useEffect(() => {
-        const savedUser = localStorage.getItem('readora-user')
+        return savedUser ? JSON.parse(savedUser) : null
+    })
 
-        if (savedUser) {
-            setUser(JSON.parse(savedUser))
-        }
+    const [token, setToken] = useState(() => {
+        return localStorage.getItem('readora_token')
+    })
 
-        setLoading(false)
-    }, [])
-
-    // Login
-    const login = (userData) => {
+    const login = (userData, jwtToken) => {
         setUser(userData)
+        setToken(jwtToken)
 
         localStorage.setItem(
-            'readora-user',
+            'readora_user',
             JSON.stringify(userData)
         )
-    }
 
-    // Register
-    const register = (userData) => {
         localStorage.setItem(
-            'readora-registered-user',
-            JSON.stringify(userData)
+            'readora_token',
+            jwtToken
         )
     }
 
-    // Authenticate registered user
-    const authenticate = (email, password) => {
-        const savedUser = localStorage.getItem(
-            'readora-registered-user'
-        )
-
-        if (!savedUser) {
-            return {
-                success: false,
-                message: 'No registered user found',
-            }
-        }
-
-        const registeredUser = JSON.parse(savedUser)
-
-        if (
-            email !== registeredUser.email ||
-            password !== registeredUser.password
-        ) {
-            return {
-                success: false,
-                message: 'Invalid email or password',
-            }
-        }
-
-        login({
-            name: registeredUser.name,
-            email: registeredUser.email,
-        })
-
-        return {
-            success: true,
-        }
-    }
-
-    // Logout
     const logout = () => {
         setUser(null)
+        setToken(null)
 
-        localStorage.removeItem('readora-user')
+        localStorage.removeItem('readora_user')
+        localStorage.removeItem('readora_token')
     }
 
     return (
         <AuthContext.Provider
             value={{
                 user,
-                loading,
+                token,
                 login,
-                register,
-                authenticate,
                 logout,
             }}
         >

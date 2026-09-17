@@ -60,7 +60,7 @@ function Login() {
             }
 
             // Save logged-in user in AuthContext
-            login(result.user)
+            login(result.user, result.token)
 
             // Redirect to home
             navigate('/')

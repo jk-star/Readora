@@ -64,4 +64,49 @@ class AuthController extends BaseController
             'message' => 'Registration successful',
         ])->setStatusCode(201);
     }
+
+    public function login()
+    {
+        $data = $this->request->getJSON(true);
+
+        if (
+            empty($data['email']) ||
+            empty($data['password'])
+        ) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Email and password are required',
+            ])->setStatusCode(400);
+        }
+
+        $userModel = new UserModel();
+
+        $user = $userModel
+            ->where('email', $data['email'])
+            ->first();
+
+        if (!$user) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Invalid email or password',
+            ])->setStatusCode(401);
+        }
+
+        if (!password_verify($data['password'], $user['password'])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Invalid email or password',
+            ])->setStatusCode(401);
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Login successful',
+            'user' => [
+                'id' => $user['id'],
+                'name' => $user['name'],
+                'email' => $user['email'],
+            ],
+        ])->setStatusCode(200);
+    }
 }

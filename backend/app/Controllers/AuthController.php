@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
-use CodeIgniter\HTTP\ResponseInterface;
+use Firebase\JWT\JWT;
 
 class AuthController extends BaseController
 {
@@ -12,14 +12,6 @@ class AuthController extends BaseController
     {
         $data = $this->request->getJSON(true);
 
-        if (!$data) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Invalid request data',
-            ])->setStatusCode(400);
-        }
-
-        // Validation
         if (
             empty($data['name']) ||
             empty($data['email']) ||
@@ -27,13 +19,12 @@ class AuthController extends BaseController
         ) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Name, email and password are required',
+                'message' => 'All fields are required',
             ])->setStatusCode(400);
         }
 
         $userModel = new UserModel();
 
-        // Check existing email
         $existingUser = $userModel
             ->where('email', $data['email'])
             ->first();
@@ -45,15 +36,14 @@ class AuthController extends BaseController
             ])->setStatusCode(409);
         }
 
-        // Hash password
         $hashedPassword = password_hash(
             $data['password'],
             PASSWORD_DEFAULT
         );
 
         $userData = [
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'password' => $hashedPassword,
         ];
 
@@ -99,9 +89,29 @@ class AuthController extends BaseController
             ])->setStatusCode(401);
         }
 
+        // JWT secret key
+        $secretKey = getenv('JWT_SECRET_KEY');
+
+        // JWT payload
+        $payload = [
+            'iss' => 'readora',
+            'iat' => time(),
+            'exp' => time() + (60 * 60 * 24),
+            'user_id' => $user['id'],
+            'email' => $user['email'],
+        ];
+
+        // Generate JWT token
+        $token = JWT::encode(
+            $payload,
+            $secretKey,
+            'HS256'
+        );
+
         return $this->response->setJSON([
             'success' => true,
             'message' => 'Login successful',
+            'token' => $token,
             'user' => [
                 'id' => $user['id'],
                 'name' => $user['name'],

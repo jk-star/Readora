@@ -4,6 +4,9 @@ import { Link } from 'react-router'
 import { useAuth } from '../../context/AuthContext'
 
 function Register() {
+
+    const [successMessage, setSuccessMessage] = useState('')
+
     const { register } = useAuth()
 
     const [name, setName] = useState('')
@@ -52,7 +55,13 @@ function Register() {
             password,
         })
 
-        console.log('Registration successful')
+        setSuccessMessage('Registration successful!')
+
+        setName('')
+        setEmail('')
+        setPassword('')
+        setConfirmPassword('')
+        setErrors({})
     }
 
     return (
@@ -68,6 +77,12 @@ function Register() {
                         Join Readora and start reading.
                     </p>
                 </div>
+
+                {successMessage && (
+                    <p className="mb-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">
+                        {successMessage}
+                    </p>
+                )}
 
                 <form
                     onSubmit={handleSubmit}
@@ -87,9 +102,10 @@ function Register() {
                             id="name"
                             type="text"
                             value={name}
-                            onChange={(event) =>
+                            onChange={(event) => {
                                 setName(event.target.value)
-                            }
+                                setSuccessMessage('')
+                            }}
                             placeholder="Enter your name"
                             className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
                         />

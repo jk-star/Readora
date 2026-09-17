@@ -9,17 +9,20 @@ const AuthContext = createContext()
 
 function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
 
-    // Restore logged-in user after page refresh
+    // Restore user when application starts
     useEffect(() => {
         const savedUser = localStorage.getItem('readora-user')
 
         if (savedUser) {
             setUser(JSON.parse(savedUser))
         }
+
+        setLoading(false)
     }, [])
 
-    // Login user
+    // Login
     const login = (userData) => {
         setUser(userData)
 
@@ -29,7 +32,7 @@ function AuthProvider({ children }) {
         )
     }
 
-    // Logout user
+    // Logout
     const logout = () => {
         setUser(null)
 
@@ -40,6 +43,7 @@ function AuthProvider({ children }) {
         <AuthContext.Provider
             value={{
                 user,
+                loading,
                 login,
                 logout,
             }}

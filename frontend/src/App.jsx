@@ -14,6 +14,8 @@ import Library from './pages/Library/Library'
 import Login from './pages/Login/Login'
 
 import Register from './pages/Register/Register'
+
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 function App() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -26,9 +28,13 @@ function App() {
           <Route path="/books/:id" element={<BookDetails />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/reader/:id" element={<Reader />} />
-          <Route path="/library" element={<Library />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/library" element={
+            <ProtectedRoute>
+              <Library />
+            </ProtectedRoute>
+          } />
         </Routes>
       </main>
     </div>

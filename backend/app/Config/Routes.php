@@ -10,3 +10,9 @@ $routes->post('api/login', 'AuthController::login');
 $routes->options('api/(:any)', static function () {
     return service('response')->setStatusCode(204);
 });
+
+$routes->get(
+    'api/profile',
+    'AuthController::profile',
+    ['filter' => 'jwt']
+);

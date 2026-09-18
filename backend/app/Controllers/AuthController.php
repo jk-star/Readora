@@ -119,4 +119,12 @@ class AuthController extends BaseController
             ],
         ])->setStatusCode(200);
     }
+
+    public function profile()
+    {
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Protected profile API accessed successfully',
+        ])->setStatusCode(200);
+    }
 }

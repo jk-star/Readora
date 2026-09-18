@@ -64,6 +64,40 @@ function AuthProvider({ children }) {
         }
     }
 
+    // Register new user
+    const register = async (userData) => {
+        try {
+            const response = await api.post('/register', {
+                name: userData.name,
+                email: userData.email,
+                password: userData.password,
+            })
+
+            const data = response.data
+
+            if (!data.success) {
+                return {
+                    success: false,
+                    message: data.message || 'Registration failed',
+                }
+            }
+
+            return {
+                success: true,
+                message: data.message,
+            }
+        } catch (error) {
+            console.error('Registration error:', error)
+
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    'Unable to connect to the server',
+            }
+        }
+    }
+
     const logout = () => {
         setUser(null)
         setToken(null)
@@ -79,6 +113,7 @@ function AuthProvider({ children }) {
                 token,
                 login,
                 authenticate,
+                register,
                 logout,
             }}
         >

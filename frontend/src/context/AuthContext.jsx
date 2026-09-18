@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react'
+import api from '../api/axios'
 
 const AuthContext = createContext()
 
@@ -28,6 +29,41 @@ function AuthProvider({ children }) {
         )
     }
 
+    const authenticate = async (email, password) => {
+        try {
+            const response = await api.post('/login', {
+                email,
+                password,
+            })
+
+            const data = response.data
+
+            if (!data.success) {
+                return {
+                    success: false,
+                    message: data.message || 'Login failed',
+                }
+            }
+
+            login(data.user, data.token)
+
+            return {
+                success: true,
+                user: data.user,
+                token: data.token,
+            }
+        } catch (error) {
+            console.error('Login error:', error)
+
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    'Unable to connect to the server',
+            }
+        }
+    }
+
     const logout = () => {
         setUser(null)
         setToken(null)
@@ -42,6 +78,7 @@ function AuthProvider({ children }) {
                 user,
                 token,
                 login,
+                authenticate,
                 logout,
             }}
         >

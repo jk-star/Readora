@@ -4,13 +4,13 @@ import { Link, useNavigate } from 'react-router'
 import { useAuth } from '../../context/AuthContext'
 
 function Login() {
-    const { login } = useAuth()
+    const { authenticate } = useAuth()
     const navigate = useNavigate()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState({})
-    const [loading, setLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -31,48 +31,21 @@ function Login() {
             return
         }
 
-        try {
-            setLoading(true)
-            setErrors({})
+        setIsLoading(true)
 
-            const response = await fetch(
-                'http://localhost:8080/api/login',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password,
-                    }),
-                }
-            )
+        const result = await authenticate(email, password)
 
-            const result = await response.json()
+        setIsLoading(false)
 
-            if (!response.ok || !result.success) {
-                setErrors({
-                    email: result.message || 'Invalid email or password',
-                })
-
-                return
-            }
-
-            // Save logged-in user in AuthContext
-            login(result.user, result.token)
-
-            // Redirect to home
-            navigate('/')
-        } catch (error) {
-            console.error('Login error:', error)
-
+        if (!result.success) {
             setErrors({
-                email: 'Unable to connect to the server',
+                email: result.message,
             })
-        } finally {
-            setLoading(false)
+
+            return
         }
+
+        navigate('/')
     }
 
     return (
@@ -98,7 +71,7 @@ function Login() {
                     <div className="mb-5">
                         <label
                             htmlFor="email"
-                            className="text-left mb-2 block text-sm font-medium text-gray-700"
+                            className="mb-2 block text-left text-sm font-medium text-gray-700"
                         >
                             Email
                         </label>
@@ -107,15 +80,20 @@ function Login() {
                             id="email"
                             type="email"
                             value={email}
-                            onChange={(event) =>
+                            onChange={(event) => {
                                 setEmail(event.target.value)
-                            }
+
+                                setErrors((prev) => ({
+                                    ...prev,
+                                    email: '',
+                                }))
+                            }}
                             placeholder="Enter your email"
                             className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
                         />
 
                         {errors.email && (
-                            <p className="text-left mt-1 text-sm text-red-600">
+                            <p className="mt-1 text-left text-sm text-red-600">
                                 {errors.email}
                             </p>
                         )}
@@ -125,7 +103,7 @@ function Login() {
                     <div className="mb-6">
                         <label
                             htmlFor="password"
-                            className="text-left mb-2 block text-sm font-medium text-gray-700"
+                            className="mb-2 block text-left text-sm font-medium text-gray-700"
                         >
                             Password
                         </label>
@@ -134,27 +112,31 @@ function Login() {
                             id="password"
                             type="password"
                             value={password}
-                            onChange={(event) =>
+                            onChange={(event) => {
                                 setPassword(event.target.value)
-                            }
+
+                                setErrors((prev) => ({
+                                    ...prev,
+                                    password: '',
+                                }))
+                            }}
                             placeholder="Enter your password"
                             className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
                         />
 
                         {errors.password && (
-                            <p className="text-left mt-1 text-sm text-red-600">
+                            <p className="mt-1 text-left text-sm text-red-600">
                                 {errors.password}
                             </p>
                         )}
                     </div>
 
-                    {/* Login Button */}
                     <button
                         type="submit"
-                        disabled={loading}
+                        disabled={isLoading}
                         className="w-full rounded-lg bg-black px-4 py-3 font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        {loading ? 'Logging in...' : 'Login'}
+                        {isLoading ? 'Logging in...' : 'Login'}
                     </button>
 
                     <p className="mt-6 text-center text-sm text-gray-600">
